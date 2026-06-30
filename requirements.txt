@@ -1,0 +1,11 @@
+langchain
+langchain-community
+langchain-google-genai
+unstructured[pdf]
+faiss-cpu
+rank_bm25
+flashrank
+sentence-transformers
+pydantic
+pillow
+python-dotenv
