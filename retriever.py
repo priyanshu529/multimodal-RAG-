@@ -23,19 +23,23 @@ DOCS_PICKLE_PATH = "data/documents.pkl"
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 
-def add_documents_to_index(new_documents: list):
+def add_documents_to_index(new_documents: list, index_dir: str = FAISS_INDEX_DIR, docs_path: str = DOCS_PICKLE_PATH):
     """
     Incremental ingestion: adds new_documents to the existing index without
     rebuilding from scratch. If no index exists yet, creates one.
     This is what lets you just upload a new PDF anytime, instead of
     re-running ingestion over every PDF you've ever uploaded.
+
+    index_dir / docs_path let the caller point this at a per-chat folder
+    instead of the shared default, so different chats can have separate,
+    isolated document sets.
     """
-    if os.path.exists(FAISS_INDEX_DIR) and os.path.exists(DOCS_PICKLE_PATH):
+    if os.path.exists(index_dir) and os.path.exists(docs_path):
         # Load what's already there
         vectorstore = FAISS.load_local(
-            FAISS_INDEX_DIR, embeddings, allow_dangerous_deserialization=True
+            index_dir, embeddings, allow_dangerous_deserialization=True
         )
-        with open(DOCS_PICKLE_PATH, "rb") as f:
+        with open(docs_path, "rb") as f:
             existing_documents = pickle.load(f)
 
         # Add the new stuff on top
@@ -47,20 +51,20 @@ def add_documents_to_index(new_documents: list):
         vectorstore = FAISS.from_documents(new_documents, embeddings)
         all_documents = new_documents
 
-    vectorstore.save_local(FAISS_INDEX_DIR)
-    os.makedirs(os.path.dirname(DOCS_PICKLE_PATH), exist_ok=True)
-    with open(DOCS_PICKLE_PATH, "wb") as f:
+    vectorstore.save_local(index_dir)
+    os.makedirs(os.path.dirname(docs_path), exist_ok=True)
+    with open(docs_path, "wb") as f:
         pickle.dump(all_documents, f)
 
     return len(all_documents)
 
 
-def load_hybrid_retriever(k: int = 5):
+def load_hybrid_retriever(k: int = 5, index_dir: str = FAISS_INDEX_DIR, docs_path: str = DOCS_PICKLE_PATH):
     """Run this every time the app starts. Loads everything from disk -- no re-embedding."""
     vectorstore = FAISS.load_local(
-        FAISS_INDEX_DIR, embeddings, allow_dangerous_deserialization=True
+        index_dir, embeddings, allow_dangerous_deserialization=True
     )
-    with open(DOCS_PICKLE_PATH, "rb") as f:
+    with open(docs_path, "rb") as f:
         documents = pickle.load(f)
 
     faiss_retriever = vectorstore.as_retriever(search_kwargs={"k": k})
