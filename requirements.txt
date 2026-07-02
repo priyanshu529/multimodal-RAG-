@@ -9,3 +9,11 @@ sentence-transformers
 pydantic
 pillow
 python-dotenv
+
+# ---- Web server (main.py) ----
+fastapi
+uvicorn[standard]
+
+# ---- Frontend-serving requirements ----
+python-multipart   # required by FastAPI to parse the PDF upload (UploadFile / multipart form-data)
+aiofiles           # required by FastAPI's StaticFiles, for serving index.html + any static assets
