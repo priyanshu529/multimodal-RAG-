@@ -16,4 +16,4 @@ uvicorn[standard]
 
 # ---- Frontend-serving requirements ----
 python-multipart   # required by FastAPI to parse the PDF upload (UploadFile / multipart form-data)
-aiofiles           # required by FastAPI's StaticFiles, for serving index.html + any static assets
+aiofiles           # required by FastAPI's StaticFiles, for serving index.html + any static assetsu
