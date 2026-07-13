@@ -1,11 +1,3 @@
-"""
-chain.py
-
-Job: Glue everything together. Take a user question -> retrieve relevant
-chunks -> format their RAW content (not summaries) into a prompt -> get
-final answer from the LLM.
-"""
-
 from prompt import ANSWER_PROMPT
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq

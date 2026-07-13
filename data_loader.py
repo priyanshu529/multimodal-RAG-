@@ -10,17 +10,8 @@ from image_summarizer import summarize_image
 
 
 def load_pdf_elements(pdf_path: str, image_output_dir: str = "extracted_images") -> list[Document]:
-    """
-    Turns a PDF into a list of Documents:
-      - text  -> chunked by heading (chunk_by_title), so a concept and its
-                 explanation stay together instead of being cut mid-paragraph
-      - table -> kept as HTML so rows/columns aren't lost
-      - image -> replaced with a vision-model text description, so it's searchable
 
-    Every Document stores both:
-      page_content        -> short text used for SEARCHING
-      metadata.raw_content -> full content used for ANSWERING later
-    """
+    
     os.makedirs(image_output_dir, exist_ok=True)
 
     raw_elements = partition_pdf(

@@ -1,12 +1,4 @@
-"""
-image_summarizer.py
 
-Job: Take an image file and ask a vision-capable LLM to describe it in plain text.
-That description is what gets embedded and searched later (images themselves
-aren't directly searchable, so we need a text "stand-in" for each image).
-
-We cache results by file hash so we never pay to summarize the same image twice.
-"""
 
 import os
 import json

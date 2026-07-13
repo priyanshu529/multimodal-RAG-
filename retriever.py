@@ -1,39 +1,20 @@
-"""
-retriever.py
-
-Job: Build a hybrid retriever (FAISS + BM25) over the Documents, then
-rerank results with FlashRank so the most relevant chunks float to the top.
-
-This is the same retrieval pattern as your calorie tracker project,
-just reused here for multimodal documents.
-"""
-
 import pickle
 import os
 from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from langchain_classic.retrievers import EnsembleRetriever, ContextualCompressionRetriever
 from langchain_community.document_compressors import FlashrankRerank
-from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from flashrank import Ranker  # needed explicitly or FlashrankRerank.model_rebuild() errors
 
 FAISS_INDEX_DIR = "data/faiss_index"
 DOCS_PICKLE_PATH = "data/documents.pkl"
 
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embeddings =GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-2")
 
 
 def add_documents_to_index(new_documents: list, index_dir: str = FAISS_INDEX_DIR, docs_path: str = DOCS_PICKLE_PATH):
-    """
-    Incremental ingestion: adds new_documents to the existing index without
-    rebuilding from scratch. If no index exists yet, creates one.
-    This is what lets you just upload a new PDF anytime, instead of
-    re-running ingestion over every PDF you've ever uploaded.
-
-    index_dir / docs_path let the caller point this at a per-chat folder
-    instead of the shared default, so different chats can have separate,
-    isolated document sets.
-    """
     if os.path.exists(index_dir) and os.path.exists(docs_path):
         # Load what's already there
         vectorstore = FAISS.load_local(

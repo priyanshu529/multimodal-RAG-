@@ -1,9 +1,3 @@
-"""
-prompt.py
-
-Job: One place to hold the prompt template, so it's easy to tweak without
-touching the chain logic.
-"""
 
 from langchain_core.prompts import ChatPromptTemplate
 

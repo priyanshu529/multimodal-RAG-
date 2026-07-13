@@ -1,16 +1,4 @@
-"""
-main.py
 
-FastAPI backend for MERGE — a multimodal RAG pipeline for chatting with your
-documents. Each chat belongs to the user who created it and has its OWN
-document index -- uploading a PDF in one chat does not affect any other
-chat's context, and no user can see or touch another user's chats.
-
-Auth: a simple username/password dictionary (DEFAULT_USERS below, or
-override via the MERGE_USERS env var).
-
-Run with: uvicorn main:app --reload
-"""
 
 import os
 import json

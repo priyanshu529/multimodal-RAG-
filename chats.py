@@ -1,17 +1,3 @@
-"""
-chats.py
-
-Job: Persist chats, their messages, and their uploaded documents to SQLite,
-so past conversations AND the list of PDFs attached to them survive a
-server restart or a chat switch -- same idea as ChatGPT's chat history
-sidebar, plus a per-chat "attached files" list.
-
-Each chat belongs to a single username, so users only ever see and touch
-their own chats and documents.
-
-Kept as plain functions over sqlite3 (stdlib), no ORM, to match the rest
-of the project's style.
-"""
 
 import sqlite3
 import os
